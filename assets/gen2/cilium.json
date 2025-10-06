@@ -1,0 +1,54 @@
+[
+    {
+        "key": "autoheal_email",
+        "description": "\u89f8\u767cautoheal \u5bc4\u9001 email",
+        "type": "list",
+        "item_type": "email",
+        "regex": null,
+        "required": true,
+        "condition": null,
+        "children": []
+    },
+    {
+        "key": "cilium",
+        "description": "",
+        "type": "object",
+        "item_type": "string",
+        "regex": null,
+        "required": true,
+        "condition": {
+            "logical": "and",
+            "conditions": []
+        },
+        "children": []
+    },
+    {
+        "key": "trident_ssd_ip_list",
+        "description": "",
+        "type": "list",
+        "item_type": "ip",
+        "regex": null,
+        "required": false,
+        "condition": {
+            "logical": "and",
+            "conditions": [
+                {
+                    "key": "trident_ssd_enabled",
+                    "operator": "eq",
+                    "value": "True"
+                }
+            ]
+        },
+        "children": []
+    },
+    {
+        "key": "trident_ssd_enabled",
+        "description": "",
+        "type": "bool",
+        "item_type": null,
+        "regex": null,
+        "required": true,
+        "condition": null,
+        "children": []
+    }
+]

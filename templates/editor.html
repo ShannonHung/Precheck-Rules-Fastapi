@@ -1,0 +1,191 @@
+{% import 'component/flash_msg.html' as flash_msg %}
+{% import 'component/field_list.html' as field_list %}
+{% import 'component/popover.html' as popover %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Precheck Json Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1> File: <span class="fw-bold text-primary">{{ filename }}</span></h1>
+        <a href="{{ url_for('index') }}" class="btn btn-success">
+            <i class="bi bi-house-door"></i> Home
+        </a>
+    </div>
+
+    <!-- 顯示 flash 訊息 -->
+    {{ flash_msg.flash_messages() }}
+
+    <div class="card mb-4">
+        <form action="{{ url_for('add_field', filename=filename) }}" method="POST">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Add new Field</h5>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add </button>
+            </div>
+            <div class="card-body">
+                <input type="hidden" id="field_path" name="field_path" value="">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="parent_field" class="form-label">
+                                Parent Field
+                                {{ popover.popover(
+                                    "If you want to depend on a parent fields, it only shows the field which type is 'list(object)' or 'object'. Because only these kind of parent field can have child fields."
+                                ) }}
+                            </label>
+{#                            <select class="form-select" id="parent_field" name="parent_field"#}
+{#                                    onchange="updateFieldPath()">#}
+                            <select class="form-select" id="parent_field" name="parent_field">
+                                <option value="">Root (.)</option>
+                                {% for field in parent_fields %}
+                                    <option value="{{ field.key }}" data-type="{{ field.type }}"
+                                            data-item-type="{{ field.item_type }}">
+                                        {{ field.key }} ({{ field.type }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="field_name" class="form-label">Field Name
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="field_name" name="field_name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" name="description">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type
+                                {{ popover.popover(
+                                    "These types are precheck rules for yaml key's value."
+                                ) }}
+                            </label>
+                            <select class="form-select" id="type" name="type" onchange="toggleItemType()">
+                                {% for type in field_types %}
+                                    <option value="{{ type.value }}">{{ type.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2" id="item_type_row" style="display: none;">
+                        <div class="mb-3">
+                            <label for="item_type" class="form-label">List Item Type<span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="item_type" name="item_type">
+                                {% for type in item_types %}
+                                    <option value="{{ type.value }}">{{ type.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="required" class="form-label">Is required?
+                                {{ popover.popover(
+                                    "When it set up to 'True', this field must show up in the YAML file."
+                                ) }}
+                            </label>
+                            <select class="form-select" id="required" name="required">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {# Current Field #}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Current Field</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Operation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for field in data %}
+                        {{ field_list.render_field(filename, field) }}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+        <!-- Include the external JS file -->
+        <script>
+            function updateFieldPath() {
+                const parentField = document.getElementById('parent_field');
+                const selectedOption = parentField.options[parentField.selectedIndex];
+                document.getElementById('field_path').value = parentField.value;
+
+                // 檢查父字段的類型
+                if (parentField.value) {
+                    const parentType = selectedOption.getAttribute('data-type');
+                    const itemType = selectedOption.getAttribute('data-item-type');
+                    if (parentType === 'list') {
+                        // 如果父字段是 list 類型
+                        if (itemType === 'object') {
+                            // 如果 item_type 是 object，允許選擇 ITEM_TYPES 中的所有選項
+                            const typeSelect = document.getElementById('type');
+                            typeSelect.disabled = false;
+                            // 重置 type 選擇器的選項
+                            typeSelect.innerHTML = '';
+                            {% for type in item_types %}
+                                typeSelect.add(new Option('{{ type.label }}', '{{ type.value }}'));
+                            {% endfor %}
+                        } else {
+                            // 如果 item_type 不是 object，鎖定為 item_type
+                            const typeSelect = document.getElementById('type');
+                            typeSelect.disabled = true;
+                            typeSelect.value = itemType;
+                        }
+                    } else if (parentType !== 'object') {
+                        // 如果父字段不是 list 或 object，禁用 type 選擇器
+                        const typeSelect = document.getElementById('type');
+                        typeSelect.disabled = true;
+                    }
+                } else {
+                    // 如果沒有選擇父字段，啟用 type 選擇器並重置選項
+                    const typeSelect = document.getElementById('type');
+                    typeSelect.disabled = false;
+                    typeSelect.innerHTML = '';
+                    {% for type in field_types %}
+                        typeSelect.add(new Option('{{ type.label }}', '{{ type.value }}'));
+                    {% endfor %}
+                }
+            }
+        </script>
+
+    </div>
+</div>
+</body>
+
+</html>

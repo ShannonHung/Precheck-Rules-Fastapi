@@ -1,0 +1,64 @@
+[
+    {
+        "key": "test8",
+        "description": "test8",
+        "multi_type": [
+            "list",
+            "number"
+        ],
+        "item_multi_type": [
+            "string",
+            "number"
+        ],
+        "regex": "",
+        "regex_enabled": false,
+        "required": false,
+        "condition": null,
+        "children": []
+    },
+    {
+        "key": "test-obj",
+        "description": "test-obj",
+        "multi_type": [
+            "list"
+        ],
+        "item_multi_type": [
+            "object"
+        ],
+        "regex": "",
+        "regex_enabled": false,
+        "required": true,
+        "condition": {
+            "logical": "and",
+            "conditions": []
+        },
+        "children": [
+            {
+                "key": "test-child",
+                "description": "",
+                "multi_type": [
+                    "string"
+                ],
+                "item_multi_type": [],
+                "regex": "",
+                "regex_enabled": false,
+                "required": false,
+                "condition": null,
+                "children": []
+            }
+        ]
+    },
+    {
+        "key": "test1",
+        "description": "",
+        "multi_type": [
+            "string"
+        ],
+        "item_multi_type": [],
+        "regex": "",
+        "regex_enabled": false,
+        "required": false,
+        "condition": null,
+        "children": []
+    }
+]

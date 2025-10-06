@@ -1,0 +1,126 @@
+[
+    {
+        "key": "trident_ssd",
+        "description": "should enable trident ssd",
+        "type": "bool",
+        "item_type": "string",
+        "regex": "None",
+        "required": true,
+        "condition": null,
+        "children": []
+    },
+    {
+        "key": "trident_ssd_object_ids",
+        "description": "ssd description",
+        "type": "list",
+        "item_type": "object",
+        "regex": "",
+        "required": false,
+        "condition": {
+            "logical": "and",
+            "conditions": [
+                {
+                    "key": "trident_ssd",
+                    "operator": "eq",
+                    "value": "True"
+                },
+                {
+                    "key": "trident_ssd_object_ids.vip",
+                    "operator": "ne",
+                    "value": "1"
+                }
+            ]
+        },
+        "children": [
+            {
+                "key": "id",
+                "description": "should enable trident ssd object ids",
+                "type": "list",
+                "item_type": "string",
+                "regex": "",
+                "required": true,
+                "condition": null,
+                "children": []
+            },
+            {
+                "key": "vip",
+                "description": "should enable ",
+                "type": "string",
+                "item_type": "string",
+                "regex": "*/16$",
+                "required": false,
+                "condition": null,
+                "children": []
+            },
+            {
+                "key": "obj",
+                "description": "",
+                "type": "list",
+                "item_type": "object",
+                "regex": "",
+                "required": true,
+                "condition": {
+                    "logical": "and",
+                    "conditions": []
+                },
+                "children": []
+            },
+            {
+                "key": "obj2",
+                "description": "",
+                "type": "object",
+                "item_type": "string",
+                "regex": null,
+                "required": true,
+                "condition": {
+                    "logical": "and",
+                    "conditions": []
+                },
+                "children": []
+            }
+        ]
+    },
+    {
+        "key": "testList",
+        "description": "",
+        "type": "list",
+        "item_type": "object",
+        "regex": "",
+        "required": false,
+        "condition": {
+            "logical": "and",
+            "conditions": []
+        },
+        "children": [
+            {
+                "key": "id",
+                "description": "",
+                "type": "string",
+                "item_type": null,
+                "regex": null,
+                "required": true,
+                "condition": null,
+                "children": []
+            }
+        ]
+    },
+    {
+        "key": "test2",
+        "description": "",
+        "type": "object",
+        "item_type": "string",
+        "regex": "",
+        "required": false,
+        "condition": {
+            "logical": "and",
+            "conditions": [
+                {
+                    "key": "trident_ssd",
+                    "operator": "eq",
+                    "value": "True"
+                }
+            ]
+        },
+        "children": []
+    }
+]
