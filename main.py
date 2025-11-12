@@ -110,6 +110,48 @@ def create_field(added_field: Field,
     save_json(abs_path, fields)
     return added_field
 
+@app.put("/api/field")
+def update_field(
+    updated_field: Field,
+    path: str = Query(..., description="Path to JSON file"),
+    parent_path: str = Query(..., description="Field belongs to which parent field")
+):
+    abs_path = get_abs_path(path)
+    field_loader = FieldLoader(BASE_PATH, abs_path)
+    fields = field_loader.load_fields_to_dict()
+
+    # 找出 parent
+    parent = field_loader.find_field_by_path(fields, parent_path)
+
+    # 找到要更新的欄位
+    target_list = parent.children if parent else fields
+    target_index = next((i for i, f in enumerate(target_list) if f.key == updated_field.key), None)
+
+    if target_index is None:
+        raise HTTPException(status_code=404, detail=f"Field '{updated_field.key}' not found")
+
+    # 執行更新（整個物件覆蓋）
+    target_list[target_index] = updated_field
+
+    # 寫回檔案
+    save_json(abs_path, fields)
+
+    return updated_field
+
+@app.get("/api/field")
+def get_field(
+    field_path: str = Query(..., description="Path to field"),
+     path: str = Query(..., description="Path to JSON file"),
+):
+    abs_path = get_abs_path(path)
+    field_loader = FieldLoader(BASE_PATH, abs_path)
+    fields = field_loader.load_fields_to_dict()
+    target_field = field_loader.find_field_by_path(fields, field_path)
+
+    if not target_field:
+        raise HTTPException(status_code=404, detail=f"Field '{field_path}' not found.")
+
+    return target_field
 
 @app.delete("/api/field")
 def delete_field(target: Field,

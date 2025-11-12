@@ -2,9 +2,11 @@
     {
         "key": "autoheal_email",
         "description": "\u89f8\u767cautoheal \u5bc4\u9001 email",
-        "type": "list",
-        "item_type": "email",
+        "multi_type": ["string",
+            "number"],
+        "item_multi_type": [],
         "regex": null,
+        "regex_enabled": false,
         "required": true,
         "condition": null,
         "children": []
@@ -12,9 +14,10 @@
     {
         "key": "cilium",
         "description": "",
-        "type": "object",
-        "item_type": "string",
+        "multi_type": [],
+        "item_multi_type": [],
         "regex": null,
+        "regex_enabled": false,
         "required": true,
         "condition": {
             "logical": "and",
@@ -25,9 +28,10 @@
     {
         "key": "trident_ssd_ip_list",
         "description": "",
-        "type": "list",
-        "item_type": "ip",
+        "multi_type": [],
+        "item_multi_type": [],
         "regex": null,
+        "regex_enabled": false,
         "required": false,
         "condition": {
             "logical": "and",
@@ -44,11 +48,95 @@
     {
         "key": "trident_ssd_enabled",
         "description": "",
-        "type": "bool",
-        "item_type": null,
+        "multi_type": [],
+        "item_multi_type": [],
         "regex": null,
+        "regex_enabled": false,
         "required": true,
         "condition": null,
         "children": []
+    },
+    {
+        "key": "parent2",
+        "description": "",
+        "multi_type": [
+            "object"
+        ],
+        "item_multi_type": [
+            "string"
+        ],
+        "regex": "",
+        "regex_enabled": false,
+        "required": false,
+        "condition": null,
+        "children": []
+    },
+    {
+        "key": "test",
+        "description": "",
+        "multi_type": [
+            "object"
+        ],
+        "item_multi_type": [
+            "string",
+            "number"
+        ],
+        "regex": "",
+        "regex_enabled": false,
+        "required": false,
+        "condition": null,
+        "children": []
+    },
+    {
+        "key": "test3",
+        "description": "",
+        "multi_type": [
+            "object",
+            "number"
+        ],
+        "item_multi_type": [
+            "string",
+            "ip"
+        ],
+        "regex": "",
+        "regex_enabled": false,
+        "required": false,
+        "condition": null,
+        "children": []
+    },
+    {
+        "key": "test4",
+        "description": "",
+        "multi_type": [
+            "object",
+            "list"
+        ],
+        "item_multi_type": [
+            "object"
+        ],
+        "regex": "",
+        "regex_enabled": false,
+        "required": false,
+        "condition": {
+            "logical": "and",
+            "conditions": []
+        },
+        "children": [
+            {
+                "key": "test",
+                "description": "",
+                "multi_type": [
+                    "object"
+                ],
+                "item_multi_type": [
+                    "object"
+                ],
+                "regex": "",
+                "regex_enabled": false,
+                "required": false,
+                "condition": null,
+                "children": []
+            }
+        ]
     }
 ]

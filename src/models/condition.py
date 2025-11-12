@@ -1,23 +1,16 @@
-from src.models.type import OperationTypes
-from typing import List
+from typing import List, Optional, Any
+from pydantic import BaseModel
 
-class Condition:
-    """表示字段的条件"""
-    def __init__(self, logical=None, conditions: List['ConditionField'] = None):
-        if conditions is None:
-            conditions = []  # Default to an empty list if None is provided
-        self.logical = logical
-        self.conditions = conditions
+class ConditionField(BaseModel):
+    key: str
+    operator: str
+    value: Any
 
-    def __repr__(self):
-        return f"Condition(logical={self.logical}, conditions={self.conditions})"
+    def __init__(self, key: str, operator: str, value: Any):
+        # 可以在這裡加入自訂邏輯
+        print(f"Initializing ConditionField: {key=} {operator=} {value=}")
+        super().__init__(key=key, operator=operator, value=value)
 
-
-class ConditionField:
-    def __init__(self,
-                 key: str,
-                 operator: str,
-                 value: str):
-        self.key = key
-        self.operator = operator
-        self.value = value
+class Condition(BaseModel):
+    logical: Optional[str] = None
+    conditions: List[ConditionField] = []

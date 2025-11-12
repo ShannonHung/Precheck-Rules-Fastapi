@@ -120,7 +120,9 @@ class FieldLoader:
                 field_info = {
                     'key': field_path,
                     'multi_type': field.multi_type,
-                    'item_multi_type': field.item_multi_type if FieldTypes.List in field.multi_type else None
+                    'item_multi_type': field.item_multi_type if
+                        (FieldTypes.List in field.multi_type or FieldTypes.Object in field.multi_type)
+                    else None
                 }
                 all_fields.append(field_info)
 
@@ -137,11 +139,13 @@ class FieldLoader:
 
         # 根據類型過濾字段
         for field_info in all_expends_fields:
-            if ('object' in field_info['multi_type']) or ('list' in field_info['multi_type'] and
-                                                          'object' in field_info['item_multi_type']):
+            if (FieldTypes.Object in field_info['multi_type'] or
+                (FieldTypes.List in field_info['multi_type'] and
+                 FieldTypes.Object in field_info['item_multi_type'])):
                 available_fields.append({
                     'key': field_info['key'],
-                    'multi_type': field_info['multi_type']
+                    'type': field_info['multi_type'],
+                    'itemType': field_info['item_multi_type']
                 })
         return available_fields
 
